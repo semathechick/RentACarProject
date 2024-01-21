@@ -16,38 +16,32 @@ public class BrandManager : IBrandService
 
     public BrandManager(IBrandDal brandDal, BrandBusinessRules brandBusinessRules, IMapper mapper)
     {
-        _brandDal = brandDal;
+        _brandDal = brandDal; 
         _brandBusinessRules = brandBusinessRules;
         _mapper = mapper;
     }
 
     public AddBrandResponse Add(AddBrandRequest request)
     {
-
+       
         _brandBusinessRules.CheckIfBrandNameNotExists(request.Name);
-
-        Brand brandToAdd = _mapper.Map<Brand>(request);
-
+       
+        Brand brandToAdd = _mapper.Map<Brand>(request); 
         _brandDal.Add(brandToAdd);
 
         AddBrandResponse response = _mapper.Map<AddBrandResponse>(brandToAdd);
         return response;
     }
 
-    public AddBrandResponse Delete(int id)
+    public GetBrandListResponse GetList(GetBrandListRequest request)
     {
-        Brand brand = _brandBusinessRules.FindBrandWithId(id);
-        brand.DeletedAt = DateTime.Now;
-        AddBrandResponse brandResponse = _mapper.Map<AddBrandResponse>(brand);
-        return brandResponse;
-    }
-
-    
-    public IList<Brand> GetList()
-    {
-
+       
 
         IList<Brand> brandList = _brandDal.GetList();
-        return brandList;
+    
+        
+
+        GetBrandListResponse response = _mapper.Map<GetBrandListResponse>(brandList); 
+        return response;
     }
 }

@@ -1,7 +1,8 @@
-﻿using Business.Abstract;
+﻿using Business;
+using Business.Abstract;
 using Business.Concrete;
-using Business.Requests.Fuel;
-using Business.Responses.Fuel;
+using Business.Requests.Brand;
+using Business.Responses.Brand;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
@@ -12,35 +13,47 @@ namespace WebAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class FuelController : ControllerBase
+public class BrandsController : ControllerBase
 {
-    private readonly IFuelService _fuelService;
+    private readonly IBrandService _fuelService;
 
-    public FuelController()
+    public BrandsController(IBrandService brandService)
     {
 
-        _fuelService = ServiceRegistration.FuelService;
-    }
+        _fuelService = brandService;
 
 
-    [HttpGet]
-    public ICollection<Fuel> GetList()
-    {
-        IList<Fuel> fuelList = _fuelService.GetList();
-        return fuelList;
-    }
+        [HttpGet]
+        public GetBrandListResponse GetList([FromQuery] GetBrandListRequest request)
+        {
+            GetBrandListResponse response = _fuelService.GetList(request);
+            return response;
+        }
 
 
+        [HttpPost]
+        public ActionResult<AddBrandResponse> Add(AddBrandRequest request)
+        {
+            try
+            {
+                AddBrandResponse response = _fuelService.Add(request);
 
 
+                return CreatedAtAction(nameof(GetList), response);
+            }
+            catch (Core.CrossCuttingConcerns.Exceptions.BusinessException exception)
+            {
+                return BadRequest(
+                    new Core.CrossCuttingConcerns.Exceptions.BusinessProblemDetails()
+                    {
+                        Title = "Business Exception",
+                        Status = StatusCodes.Status400BadRequest,
+                        Detail = exception.Message,
+                        Instance = HttpContext.Request.Path
+                    }
+                );
 
-    [HttpPost]
-    public ActionResult<AddFuelResponse> Add(AddFuelRequest request)
-    {
-        AddFuelResponse response = _fuelService.Add(request);
-
-
-        return CreatedAtAction(nameof(GetList), response);
+            }
+        }
     }
 }
-

@@ -1,17 +1,12 @@
-﻿using Core.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Entities.Concrete;
-
-public class Fuel : Entity<int>
+namespace Entities.Concrete
 {
-    public string Name { get; set; }
-
-    public Fuel()
+    internal class Fuel
     {
-    }
-
-    public Fuel(string name)
-    {
-        Name = name;
     }
 }

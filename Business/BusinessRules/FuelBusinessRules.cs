@@ -1,22 +1,25 @@
-﻿using DataAccess.Abstract;
+﻿
 
-namespace Business.BusinessRules;
+using DataAccess.Abstract;
 
-public class FuelBusinessRules
+namespace Business.BusinessRules
 {
-    private readonly IFuelDal _fuelDal;
-
-    public FuelBusinessRules(IFuelDal fuelDal)
+    public class FuelBusinessRules
     {
-        _fuelDal = fuelDal;
-    }
+        private readonly IFuelDal _fuelDal;
 
-    public void CheckIfFuelNameNotExists(string fuelName)
-    {
-        bool isExists = _fuelDal.GetList().Any(b => b.Name == fuelName);
-        if (isExists)
+        public FuelBusinessRules(IFuelDal fuelDal)
         {
-            throw new Exception("Fuel already exists.");
+            _fuelDal = fuelDal;
+        }
+        public void CheckFuelTypeName(string fuelType)
+        {
+            List<string> fuelTypes = new() { "LPG", "Diesel", "electricity" };
+            bool isContain = fuelTypes.Contains(fuelType);
+            if (!isContain)
+            {
+                throw new Exception("Invalid Transmission Type...");
+            }
+
         }
     }
-}

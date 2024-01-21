@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using Business;
+using Business.Abstract;
 using Business.Concrete;
 using Business.Requests.Brand;
 using Business.Responses.Brand;
@@ -16,30 +17,43 @@ public class BrandsController : ControllerBase
 {
     private readonly IBrandService _brandService; 
 
-    public BrandsController()
+    public BrandsController(IBrandService brandService)
     {
-        
-        _brandService = ServiceRegistration.BrandService;
-    }
+
+        _brandService = brandService;
 
 
-    [HttpGet] 
-    public ICollection<Brand> GetList()
-    {
-        IList<Brand> brandList = _brandService.GetList();
-        return brandList;
-    }
+        [HttpGet]
+        public GetBrandListResponse GetList([FromQuery] GetBrandListRequest request)
+        {
+            GetBrandListResponse response = _brandService.GetList(request);
+            return response;
+        }
 
 
-  
+        [HttpPost]
+        public ActionResult<AddBrandResponse> Add(AddBrandRequest request)
+        {
+            try
+            {
+                AddBrandResponse response = _brandService.Add(request);
 
 
-    [HttpPost] 
-    public ActionResult<AddBrandResponse> Add(AddBrandRequest request)
-    {
-        AddBrandResponse response = _brandService.Add(request);
+                return CreatedAtAction(nameof(GetList), response);
+            }
+            catch (Core.CrossCuttingConcerns.Exceptions.BusinessException exception)
+            {
+                return BadRequest(
+                    new Core.CrossCuttingConcerns.Exceptions.BusinessProblemDetails()
+                    {
+                        Title = "Business Exception",
+                        Status = StatusCodes.Status400BadRequest,
+                        Detail = exception.Message,
+                        Instance = HttpContext.Request.Path
+                    }
+                );
 
-       
-        return CreatedAtAction(nameof(GetList), response); 
+            }
+        }
     }
 }
