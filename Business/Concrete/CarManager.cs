@@ -26,12 +26,12 @@ public class CarManager : ICarService
     public AddCarResponse Add(AddCarRequest request)
     {
 
-        _carBusinessRules.IfCarModelYearIsValid(request.Name);
+        _carBusinessRules.IfCarModelYearIsValid(request.Plate);
 
         Car carToAdd = _mapper.Map<Car>(request);
         _carDal.Add(carToAdd);
 
-        AddCarResponse response = _mapper.Map<AddCarResponse>(carToAdd);
+        AddCarResponse response = _mapper.Map<AddCarResponse>(request.Plate);
         return response;
     }
 

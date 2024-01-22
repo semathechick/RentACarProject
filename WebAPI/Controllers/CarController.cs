@@ -11,19 +11,18 @@ using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebAPI.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class CarController : ControllerBase
+namespace WebAPI.Controllers
 {
-    private readonly ICarService _carService;
-
-    public CarController(ICarService carService)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CarController : ControllerBase
     {
+        private readonly ICarService _carService;
 
-        _carService = carService;
-
+        public CarController(ICarService carService)
+        {
+            _carService = carService;
+        }
 
         [HttpGet]
         public GetCarListResponse GetList([FromQuery] GetCarListRequest request)
@@ -32,15 +31,12 @@ public class CarController : ControllerBase
             return response;
         }
 
-
         [HttpPost]
         public ActionResult<AddCarResponse> Add(AddCarRequest request)
         {
             try
             {
                 AddCarResponse response = _carService.Add(request);
-
-
                 return CreatedAtAction(nameof(GetList), response);
             }
             catch (Core.CrossCuttingConcerns.Exceptions.BusinessException exception)
@@ -54,8 +50,8 @@ public class CarController : ControllerBase
                         Instance = HttpContext.Request.Path
                     }
                 );
-
             }
         }
     }
 }
+

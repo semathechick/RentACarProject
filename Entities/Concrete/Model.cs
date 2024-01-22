@@ -12,7 +12,7 @@ public class Model : Entity<int>
 
     public int TransmissionId { get; set; }
     public int ModelId { get; set; }
-    public decimal DailyPrice { get; set; }
+    public decimal? DailyPrice { get; set; }
 
     public Model(string name, int dailyPrice, int fuelId, int transmissionId, int modelId)
     {

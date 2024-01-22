@@ -36,6 +36,12 @@ public abstract class InMemoryEntityRepositoryBase<TEntity, TEntityId>
         return entities;
     }
 
+    public IList<TEntity>GetCarList()
+    {
+        IList<TEntity> entities = _entities.Where(e => e.DeletedAt.HasValue == false).ToList();
+        return entities;
+    }
+
     public void Update(TEntity entity)
     {
         entity.UpdateAt = DateTime.UtcNow;

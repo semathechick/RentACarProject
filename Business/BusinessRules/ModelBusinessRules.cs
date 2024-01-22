@@ -13,18 +13,18 @@ namespace Business.BusinessRules
         {
             _modelDal = modelDal;
         }
-        public void IfModelBusinessRulesExists(string modelName)
+        public void IfModelBusinessRulesExists(string name)
         {
-            bool isExists = _modelDal.GetList().Any(b=> b.Name== modelName);
+            bool isExists = _modelDal.GetList().Any(b=> b.Name== name);
             if (isExists) 
             {
                 throw new BusinessException("Model name already exists.");
             }
         }
 
-        public void CheckModelNameLength(string modelName)
+        public void CheckModelNameLength(string name)
         {
-            int modelNameLength = modelName.Length;
+            int modelNameLength = name.Length;
             if (modelNameLength <= 1) 
             {
                 throw new BusinessException("Model name is too short.");

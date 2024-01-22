@@ -2,10 +2,10 @@
 
 public class AddCarRequest
 {
-    public string Name { get; set; }
+    public string Plate { get; set; }
 
-    public AddCarRequest(string name)
+    public AddCarRequest(string plate )
     {
-        Name = name;
+        Plate = plate;
     }
 }
